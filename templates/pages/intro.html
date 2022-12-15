@@ -12,6 +12,56 @@
     <link rel = "icon" href = "../static/images/logo.png" type = "image/x-icon">
 </head>
 <body>
-    {% include "components/navBar.html" %}
+    <div>
+        {% include "components/navBar.html" %}
+    </div>  
+    <main class="m-3">
+        <div>
+            <br>
+            <br>
+            <h3>
+                Introduction and motivation
+            </h3>
+            <p>
+                Sequence alignment is an important topic in bioinfomatics to analyze DNA, RNA and protein sequence similarity and phylogeny. The lecture of CS 466 talked about three types of alignments for a pair of sequences, which are global alignment, fitting alignment and local alignment. Given two sequence v and w and scoring funciton, global alignment is to find alignment of v (with length m) and w (with length n) with maximum score, fitting alignment is to find alignment of v and a substring of w with maximum global alignment score among all global alignments of v and all substrings of w, and local alignment is to find a substring of v and a substring of w whose alignment has maximum global alignment score among all global alignment of all substrings of v and w. Using two-dimensional dynamic programming method to fill a scoring table, all three alignment problems can be solved in O(mn) time and O(mn) space. However, for large sequences, such algorithms require corresponding polynomial space which will consume large amount of memory. Thus, a space-effieicnt sequence alignment method which can save memory consumption will be benificial in the condition that memory resource is limited. The lecture in CS 466 introduced an algorithm proposed by Dan Hirshberg that further optimzes the space complexity, which uses divide and conquer to solve the global alignment problem, and decrease time complexity from polynomial space to linear space. Similar ideas can be applied to solve the fitting and local alignment problems with efficiently reduced space. In this project, the team is to implement space-efficient alignment algorithms for the global, fitting and local alignment problems and benchmark the space usage and time usage comparing to the 2-dimensional dynamic programming cases. 
+            </p>
+            <h3>
+                Implementation
+            </h3>
+            <h5>
+                Original dynamic programming method
+            </h5>
+            <p>
+                The team firstly implemented the two-dimensional dynamic programming alignment algorithms which later space-efficient algorithms will be compared to. Part of the implementations are adapted from the alignment and traceback functions in problem set 1 programming part. The implementations for the three alignment problems are similar: firstly, a m*n two-dimensional table is used to compute and store the scores, and another m*n table is used for storing path pointers. After computing the score and pointer tables, the algorithm uses the pointer table to traceback and construct the sequence alignment. The original dynamic programming algorithms for the three alignment problems have the same complexities: O(mn) time and O(mn) space.
+            </p>
+            <h5>
+                Space-Efficient Global Alignment Algorithm (Hirschberg Algorithm)
+            </h5>
+            <p>
+                Next, the team implemented the <a href="https://en.wikipedia.org/wiki/Hirschberg%27s_algorithm">Hirschberg Algorithm</a> to solve global alignment problem with space efficiency. Hirschberg Algorithm is using divide and conquer method to divide global alignment problem into subproblems with smaller size.
+            </p>
+            <h5>
+                Space-Efficient Fitting Alignment Algorithm
+            </h5>
+            <p>
+                For fitting alignment, the difference of global and fitting alignment is that global alignment is to find an optimal alignment from two whole string of v and w, whereas fitting alignment is to find an optimal alignment between v and a substring of w. If the start and end point of substring of w (call it w’) are known, Hirschberg algorithm can be used to compute global alignment between v and w’.  Following this idea, the team introduces two procedures of FindEnd() and FindStart() to find the end and start of the optimal substring of w, and then call Hirschberg Algorithm on v and w’.
+            </p>
+            <p>
+                FindEnd(): This procedure finds the end point in w that has the highest score using the fitting alignment recurrence. The team achieve this by perform the linear space dynamic programming in alignment table, which only takes two-colume space per time calculate scores and keep updating the best score and its corresponding location. This method is taking O(mn) time and linear space, by only retaining the last row/column of the dynamic programming table. In detail, the team uses the fitting alignment recurrence, and in the last row of the dynamic programming table, find the j value with the highest score, and report(len(v), j) as the end.
+            </p>
+            <p>
+                FindStart(): This procedure finds the start point in w that has the highest score using the fitting alignment recurrence, given the end point reported by FindEnd(). The team reverses a copy of v and w’, use the end point as the start point (just in this procedure), and do another linear space dp to get the best scores. In this procedure, however, the team must use the global alignment recurrence, because the start point has already been fixed, meaning the reported score must be from an alignment starting from the start point. The start index is reported after calculating the correct value in the original sequences since reversed sequences is used in this procedure.
+            </p>
+            <p>
+                After having the starting point and the ending point, the team simply obtain the corresponding substrings of v and w (in this case the whole v string), and use them as parameters in calling the Hirschberg algorithm implemented in the last part. In this way, the algorithm will take O(mn) time and O(m) space, which is space-efficient.
+            </p>
+            <h5>
+                Space-Efficient Local Alignment Algorithm
+            </h5>
+            <p>
+                Next, the team implements space-efficient local alignment algorithm by introducing the similar FindEnd() and FindStart() procedures. The only difference between space-efficient local and fitting alignment algorithm is that, for FindEnd() method, we need to compute the scores using the local alignment recurrence, and find the best scores among every vertices in the table (instead of only the last row as in fitting alignment). This is because local alignment can also be looking for a substring of v. Similarly, for FindStart(), we compute the scores using the global alignment recurrence but must find the best scores among every vertices in the dynamic programming table. In this way, the algorithm will take O(mn) time and O(m) space, which is space-efficient.
+            </p>
+        </div>
+    </main>
 </body>
 </html>
