@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpaceEfficientAlignment</title>
+    <link rel = "icon" href = "../static/images/logo.png" type = "image/x-icon">
+    <script src="../static/js/generateTable.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+</head>
+
+<body>
+    <div>
+        {% include "components/navBar.html" %}
+    </div>  
+    <!-- URL_for is an Flask way of creating dynamic URLs where the first arguments refers to the function of that specific route in flask.
+    In our form it will create a Dynamic route which has gfg function in the flask app -->
+    <main class="m-3">
+        <form action="{{ url_for("align")}}" method="post">
+            <div class="form-group">
+                <label for="sequence1">Please enter your first sequence: </label>
+                <input type="text" class="form-control" id="sequence1" name="s1" placeholder="sequence1" required>
+            </div>
+            <div class="form-group">
+                <label for="sequence1">Please enter your second sequence: </label>
+                <input type="text" class="form-control" id="sequence2" name="s2" placeholder="sequence2" required>
+            </div>
+            <div>
+                <label>Please choose your alignment type:</label>
+                <div class="form-check m-1">
+                    <input class="form-check-input" type="radio" name="options" id="global" value="Global" checked>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Global Alignment
+                    </label>
+                </div>
+                <div class="form-check m-1">
+                    <input class="form-check-input" type="radio" name="options" id="fitting" value="Fitting">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Fitting Alignment
+                    </label>
+                </div>
+                <div class="form-check m-1">
+                    <input class="form-check-input" type="radio" name="options" id="local" value="Local">
+                    <label class="form-check-label" for="flexRadioDefault3">
+                        Local Alignment
+                    </label>
+                </div>
+            </div>
+            
+            <input type="submit" class="btn btn-dark my-3" value="Show Table" />
+        </form>
+        <p></p>
+        <div>
+            {% if align1 %}
+            {% with type = type, align1 = align1, align2 = align2, s1 = s1, s2 = s2, alignCorrds = alignCorrds, alignScore = alignScore%}
+            {% include "components/showRes.html" %}
+            {% endwith %}
+            {% endif %}
+        </div>
+    </main>
+    </div>
+</body>
+</html>
